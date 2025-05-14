@@ -17,18 +17,19 @@
 
         <!-- Cart/Account Icons -->
         <div class="flex items-center space-x-4">
-          <div class="relative">
+          <div class="relative" v-if="$route.name !== 'itemcart'">
             <router-link to="/itemcart">
               <button class="text-gray-600 hover:text-blue-600">🛒</button></router-link
             >
 
             <span
+              v-if="$route.name !== 'itemcart'"
               class="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-semibold px-1 py-0.2 rounded-full"
             >
               {{ cartItem }}
             </span>
           </div>
-          <router-link to="user-profile">
+          <router-link :to="{ name: 'user-profile' }">
             <button class="text-gray-600 hover:text-blue-600">👤</button>
           </router-link>
         </div>

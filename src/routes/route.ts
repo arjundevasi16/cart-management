@@ -3,11 +3,16 @@ import ProductDetail from '@/components/ProductDetail.vue'
 import ProductList from '@/components/ProductList.vue'
 import CartItem from '@/components/CartItem.vue'
 import UserProfile from '@/components/UserProfile.vue'
+import path from 'path'
+import CheckOutPage from '@/components/CheckOutPage.vue'
+import OrderCompleted from '@/components/OrderCompleted.vue'
 const routes = [
-  { path: '/ProductDetails/:id', name: 'ProductDetails', component: ProductDetail, props: true },
   { path: '/', name: 'ProductList', component: ProductList, props: true },
-  { path: '/itemcart', component: CartItem, props: true },
+  { path: '/itemcart', component: CartItem, props: true, name: 'itemcart' },
   { path: '/user-profile', component: UserProfile, props: true, name: 'user-profile' },
+  { path: '/ProductDetails/:id', name: 'ProductDetails', component: ProductDetail, props: true },
+  { path: '/checkoutpage', name: 'checkoutpage', component: CheckOutPage },
+  { path: '/orderPlaced', name: 'orderPlaced', component: OrderCompleted },
 ]
 
 const router = createRouter({

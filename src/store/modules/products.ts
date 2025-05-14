@@ -116,7 +116,7 @@ export default {
     }
   },
   mutations: {
-    ADD_ITEM_IN_CART(state, itemId: number) {
+    ADD_ITEM_IN_CART(state: ProductState, itemId: number) {
       state.itemInCart[itemId] = {
         id: itemId,
         quantity: 1,
@@ -124,10 +124,13 @@ export default {
       const itemStock = state.watchProducts[itemId]
       itemStock.inStocks -= 1
     },
-    REMOVE_TO_CART(state, id: number) {
-      delete state.itemInCart[id]
+    REMOVE_TO_CART(state: ProductState, payload: { id: number; emptyCart: boolean }) {
+      delete state.itemInCart[payload.id]
+      if (payload.emptyCart) {
+        state.itemInCart = {}
+      }
     },
-    UPDATE_ITEM_IN_STOCK(state, payload: { id: number; isAdd: number }) {
+    UPDATE_ITEM_IN_STOCK(state: ProductState, payload: { id: number; isAdd: number }) {
       const itemInCart = state.itemInCart[payload.id]
       const itemInStock = state.watchProducts[payload.id]
       if (itemInStock.inStocks !== 0) {
@@ -140,7 +143,7 @@ export default {
     },
   },
   getters: {
-    getItemDetailsInCart(state) {
+    getItemDetailsInCart(state: ProductState) {
       const data = []
       const item = state.itemInCart
       for (let x in item) {
@@ -148,6 +151,12 @@ export default {
         data.push({ ...state.watchProducts[x], quantity: cartItem.quantity })
       }
       return data
+    },
+    totalPrice(state: ProductState, getters) {
+      const items = getters.getItemDetailsInCart
+      return items.reduce((acc: number, crr: Product) => {
+        return acc + crr.price * (crr.quantity || 0)
+      }, 0)
     },
   },
 }

@@ -14,7 +14,7 @@
           <div v-for="item in cartItems" :key="item.id">
             <!-- Image -->
             <div
-              v-if="(item.quantity || 0) > 0"
+              v-if="(item?.quantity || 0) > 0"
               class="bg-white shadow-md rounded-2xl overflow-hidden hover:shadow-lg transition-all p-4 flex flex-col md:flex-row md:items-center justify-between gap-8"
             >
               <img
@@ -27,8 +27,8 @@
               <div class="flex-1">
                 <h3 class="text-lg font-semibold text-gray-800">{{ item.name }}</h3>
                 <p class="text-sm text-gray-500">Brand: {{ item.brand }}</p>
-                <p class="text-sm mt-1" :class="item.quantity ? 'text-green-600' : 'text-red-500'">
-                  {{ item.quantity ? 'In Stock' : 'Out of Stock' }}
+                <p class="text-sm mt-1" :class="item.inStocks ? 'text-green-600' : 'text-red-500'">
+                  {{ item.inStocks ? 'In Stock' : 'Out of Stock' }}
                 </p>
               </div>
 
@@ -37,14 +37,19 @@
                 <span class="text-xl font-bold text-indigo-600">₹{{ item.price }}</span>
                 <div class="flex gap-2 mt-1">
                   <button
-                    class="w-6 h-6 flex items-center justify-center bg-gray-100 text-xl font-semibold rounded hover:bg-gray-200 transition"
+                    class="w-6 h-6 flex items-center justify-center text-lg font-bold rounded bg-gray-200 hover:bg-gray-300 transition cursor-pointer"
                     @click="updateItemCount(-1, item.id)"
                   >
                     -
                   </button>
                   <span class="text-base font-medium">{{ item.quantity }}</span>
                   <button
-                    class="w-6 h-6 flex items-center justify-center bg-gray-100 text-xl font-semibold rounded hover:bg-gray-200 transition"
+                    :disabled="item.inStocks === 0"
+                    :class="
+                      item.inStocks > 0
+                        ? 'w-6 h-6 flex items-center justify-center text-lg font-bold rounded bg-gray-200 hover:bg-gray-300 transition cursor-pointer'
+                        : 'w-6 h-6 flex items-center justify-center text-lg font-bold rounded bg-gray-100 text-gray-400 cursor-not-allowed'
+                    "
                     @click="updateItemCount(1, item.id)"
                   >
                     +
@@ -71,6 +76,7 @@
         <!-- Checkout Button -->
         <div class="mt-6 text-center">
           <button
+            @click="checkOutPage"
             class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-full shadow-md transition"
           >
             Proceed to Checkout
@@ -103,17 +109,18 @@ export default {
       return this.$store.getters['products/getItemDetailsInCart']
     },
     totalPrice() {
-      return this.cartItems.reduce((acc: number, crr: Product) => {
-        return crr.price * (crr.quantity || 0) + acc
-      }, 0)
+      return this.$store.getters['products/totalPrice']
     },
   },
   methods: {
     remove_cart(id: number) {
-      this.$store.commit('products/REMOVE_TO_CART', id)
+      this.$store.commit('products/REMOVE_TO_CART', { id: id, emptyCart: false })
     },
     updateItemCount(isAdd: number, id: number) {
       this.$store.commit('products/UPDATE_ITEM_IN_STOCK', { isAdd, id })
+    },
+    checkOutPage() {
+      this.$router.push('/checkoutpage')
     },
   },
 }
