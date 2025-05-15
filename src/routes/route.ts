@@ -3,7 +3,6 @@ import ProductDetail from '@/components/ProductDetail.vue'
 import ProductList from '@/components/ProductList.vue'
 import CartItem from '@/components/CartItem.vue'
 import UserProfile from '@/components/UserProfile.vue'
-import path from 'path'
 import CheckOutPage from '@/components/CheckOutPage.vue'
 import OrderCompleted from '@/components/OrderCompleted.vue'
 const routes = [

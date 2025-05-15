@@ -44,7 +44,6 @@
                   </button>
                   <span class="text-base font-medium">{{ item.quantity }}</span>
                   <button
-                    :disabled="item.inStocks === 0"
                     :class="
                       item.inStocks > 0
                         ? 'w-6 h-6 flex items-center justify-center text-lg font-bold rounded bg-gray-200 hover:bg-gray-300 transition cursor-pointer'
@@ -63,15 +62,11 @@
                 </button>
               </div>
             </div>
-            <div v-else>
-              {{ remove_cart(item.id) }}
-            </div>
           </div>
         </div>
         <!-- Total -->
         <div class="border-t pt-6 mt-6 flex justify-between items-center text-lg font-medium">
-          <span>Total:</span>
-          <span class="text-2xl font-bold text-green-600">₹{{ totalPrice }}</span>
+          <span class="text-2xl font-bold text-green-600">Total:₹{{ totalPrice }}</span>
         </div>
         <!-- Checkout Button -->
         <div class="mt-6 text-center">
@@ -87,9 +82,7 @@
       <!-- Empty Cart -->
       <div v-else class="text-center text-gray-500 py-12">
         <p>🛍️ Your cart is currently empty.</p>
-        <router-link to="/">
-          <Button class="!w-1/2 mt-4">ADD PRODUCT</Button>
-        </router-link>
+        <Button @click="$router.push('/')" class="!w-1/2 mt-4">ADD PRODUCT</Button>
       </div>
     </div>
   </div>
@@ -114,10 +107,10 @@ export default {
   },
   methods: {
     remove_cart(id: number) {
-      this.$store.commit('products/REMOVE_TO_CART', { id: id, emptyCart: false })
+      this.$store.commit('products/REMOVE_TO_CART', id)
     },
-    updateItemCount(isAdd: number, id: number) {
-      this.$store.commit('products/UPDATE_ITEM_IN_STOCK', { isAdd, id })
+    updateItemCount(count: number, id: number) {
+      this.$store.dispatch('products/updateItemQuantityAndStock', { count, id })
     },
     checkOutPage() {
       this.$router.push('/checkoutpage')

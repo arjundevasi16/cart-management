@@ -111,7 +111,7 @@ export default {
   methods: {
     orderPlace() {
       this.$router.push('/orderPlaced')
-      this.$store.commit('products/REMOVE_TO_CART', { id: 0, emptyCart: true })
+      this.$store.commit('products/RESET_CART')
     },
   },
 }

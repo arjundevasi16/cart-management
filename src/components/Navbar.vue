@@ -26,7 +26,7 @@
               v-if="$route.name !== 'itemcart'"
               class="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-semibold px-1 py-0.2 rounded-full"
             >
-              {{ cartItem }}
+              {{ cartItemLength }}
             </span>
           </div>
           <router-link :to="{ name: 'user-profile' }">
@@ -42,7 +42,7 @@
 export default {
   name: 'Navbar',
   computed: {
-    cartItem() {
+    cartItemLength() {
       return Object.keys(this.$store.state.products.itemInCart).length
     },
   },

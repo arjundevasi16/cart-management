@@ -1,4 +1,4 @@
-import type { CartItem, Product } from '@/types'
+import type { CartItem, Product, ProductGetters } from '@/types'
 interface ProductState {
   watchProducts: {
     [id: number]: Product
@@ -7,6 +7,7 @@ interface ProductState {
     [id: number]: CartItem
   }
 }
+
 export default {
   namespaced: true,
   state(): ProductState {
@@ -121,25 +122,20 @@ export default {
         id: itemId,
         quantity: 1,
       }
-      const itemStock = state.watchProducts[itemId]
-      itemStock.inStocks -= 1
+      state.watchProducts[itemId].inStocks -= 1
     },
-    REMOVE_TO_CART(state: ProductState, payload: { id: number; emptyCart: boolean }) {
-      delete state.itemInCart[payload.id]
-      if (payload.emptyCart) {
-        state.itemInCart = {}
-      }
+    REMOVE_TO_CART(state: ProductState, id: number) {
+      state.watchProducts[id].inStocks += state.itemInCart[id].quantity
+      delete state.itemInCart[id]
     },
-    UPDATE_ITEM_IN_STOCK(state: ProductState, payload: { id: number; isAdd: number }) {
-      const itemInCart = state.itemInCart[payload.id]
-      const itemInStock = state.watchProducts[payload.id]
-      if (itemInStock.inStocks !== 0) {
-        itemInCart.quantity += payload.isAdd
-        itemInStock.inStocks -= payload.isAdd
-      } else if (itemInStock.inStocks === 0 && payload.isAdd === -1) {
-        itemInCart.quantity += payload.isAdd
-        itemInStock.inStocks -= payload.isAdd
-      }
+    RESET_CART(state: ProductState) {
+      state.itemInCart = {}
+    },
+    UPDATE_STOCK_IN_WATCH_PRODUCT(state: ProductState, payload: { stock: number; id: number }) {
+      state.watchProducts[payload.id].inStocks = payload.stock
+    },
+    UPDATE_CART_ITEM_QUANTITY(state: ProductState, payload: { quantity: number; id: number }) {
+      state.itemInCart[payload.id].quantity = payload.quantity
     },
   },
   getters: {
@@ -152,11 +148,32 @@ export default {
       }
       return data
     },
-    totalPrice(state: ProductState, getters) {
-      const items = getters.getItemDetailsInCart
-      return items.reduce((acc: number, crr: Product) => {
+    totalPrice: (state: ProductState, getters: ProductGetters) => {
+      return getters.getItemDetailsInCart.reduce((acc: number, crr: Product) => {
         return acc + crr.price * (crr.quantity || 0)
       }, 0)
+    },
+  },
+  actions: {
+    updateItemQuantityAndStock(
+      { state, commit }: { state: ProductState; commit: Commit },
+      payload: { id: number; count: number },
+    ) {
+      console.log('context.state.itemInCart: ', state.itemInCart)
+      let quantity = state.itemInCart[payload.id].quantity
+      let stock = state.watchProducts[payload.id].inStocks
+      const isAdd = payload.count === 1
+      if (stock === 0 && isAdd) {
+        return
+      }
+      quantity += payload.count
+      stock -= payload.count
+      if (quantity === 0) {
+        commit('REMOVE_TO_CART', payload.id)
+        return
+      }
+      commit('UPDATE_STOCK_IN_WATCH_PRODUCT', { stock, id: payload.id })
+      commit('UPDATE_CART_ITEM_QUANTITY', { quantity, id: payload.id })
     },
   },
 }
