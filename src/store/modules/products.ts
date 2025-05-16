@@ -159,13 +159,8 @@ export default {
       { state, commit }: { state: ProductState; commit: Commit },
       payload: { id: number; count: number },
     ) {
-      console.log('context.state.itemInCart: ', state.itemInCart)
       let quantity = state.itemInCart[payload.id].quantity
       let stock = state.watchProducts[payload.id].inStocks
-      const isAdd = payload.count === 1
-      if (stock === 0 && isAdd) {
-        return
-      }
       quantity += payload.count
       stock -= payload.count
       if (quantity === 0) {

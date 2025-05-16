@@ -44,6 +44,7 @@
                   </button>
                   <span class="text-base font-medium">{{ item.quantity }}</span>
                   <button
+                    :disabled="item.inStocks === 0"
                     :class="
                       item.inStocks > 0
                         ? 'w-6 h-6 flex items-center justify-center text-lg font-bold rounded bg-gray-200 hover:bg-gray-300 transition cursor-pointer'
