@@ -41,6 +41,7 @@ export default {
       required: true,
     },
   },
+
   methods: {
     ProductDetail() {
       this.$router.push({ name: 'ProductDetails', params: { id: this.product.id } })

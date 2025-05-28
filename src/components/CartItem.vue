@@ -66,7 +66,7 @@
           </div>
         </div>
         <!-- Total -->
-        <div class="border-t pt-6 mt-6 flex justify-between items-center text-lg font-medium">
+        <div class="border-t pt-6 mt-6 flex justify-end items-center text-lg font-medium">
           <span class="text-2xl font-bold text-green-600">Total:₹{{ totalPrice }}</span>
         </div>
         <!-- Checkout Button -->
@@ -114,7 +114,7 @@ export default {
       this.$store.dispatch('products/updateItemQuantityAndStock', { count, id })
     },
     checkOutPage() {
-      this.$router.push('/checkoutpage')
+      this.$router.push('/checkout-page')
     },
   },
 }
