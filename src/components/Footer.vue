@@ -23,9 +23,14 @@
       <!-- Contact -->
       <div>
         <h3 class="text-lg font-semibold mb-3">Contact</h3>
-        <p class="text-sm text-gray-300">Email: support@example.com</p>
-        <p class="text-sm text-gray-300">Phone: +91 98765 43210</p>
-        <p class="text-sm text-gray-300">Location: New Delhi, India</p>
+        <address class="text-sm text-gray-300">
+          <a href="mailto:support@example.com" class="text-sm text-gray-300">
+            Email: support@example.com
+          </a>
+          <br />
+          Phone: +91 98765 43210 <br />
+          Location: New Delhi, India <br />
+        </address>
       </div>
     </div>
 

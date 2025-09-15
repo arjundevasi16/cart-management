@@ -4,32 +4,55 @@
       <div class="flex justify-between h-16 items-center">
         <!-- Logo -->
         <div class="flex-shrink-0">
-          <a href="#" class="text-xl font-bold text-blue-600">MyWatchStore</a>
+          <router-link to="/" class="text-xl font-bold text-blue-600">MyWatchStore</router-link>
         </div>
 
         <!-- Navigation Links -->
         <div class="hidden md:flex space-x-6">
-          <router-link to="/" class="text-gray-600 hover:text-blue-600">Home</router-link>
-          <a href="#" class="text-gray-600 hover:text-blue-600">Products</a>
-          <a href="#" class="text-gray-600 hover:text-blue-600">About</a>
-          <a href="#" class="text-gray-600 hover:text-blue-600">Contact</a>
+          <router-link to="/" class="text-gray-600 hover:text-blue-600">Products</router-link>
+          <router-link to="/about" class="text-gray-600 hover:text-blue-600">About</router-link>
+          <router-link to="/contact" class="text-gray-600 hover:text-blue-600">Contact</router-link>
         </div>
 
-        <!-- Cart/Account Icons -->
+        <!-- Right-side Actions -->
         <div class="flex items-center space-x-4">
-          <div class="relative">
-            <router-link to="/itemcart">
-              <button class="text-gray-600 hover:text-blue-600">🛒</button></router-link
-            >
-
+          <!-- Cart Icon -->
+          <div class="relative" v-if="$route.name !== 'itemcart'">
+            <router-link to="/itemcart" class="text-gray-600 hover:text-blue-600 text-lg">
+              🛒
+            </router-link>
             <span
-              class="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-semibold px-1 py-0.2 rounded-full"
+              class="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-semibold px-1 py-0.5 rounded-full"
+              v-if="cartItemLength > 0"
             >
-              {{ cartItem }}
+              {{ cartItemLength }}
             </span>
           </div>
-          <router-link to="user-profile">
-            <button class="text-gray-600 hover:text-blue-600">👤</button>
+
+          <!-- Conditional Auth Buttons -->
+          <div v-if="!isAuthenticated" class="flex space-x-2">
+            <router-link
+              to="/login"
+              class="text-sm px-3 py-1 border rounded-md text-blue-600 border-blue-600 hover:bg-blue-50"
+            >
+              Login
+            </router-link>
+            <router-link
+              to="/sign-up"
+              class="text-sm px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              Sign Up
+            </router-link>
+          </div>
+
+          <!-- Profile icon (if logged in) -->
+          <router-link
+            v-else
+            to="/user-profile"
+            class="text-gray-600 hover:text-blue-600 text-xl"
+            title="Profile"
+          >
+            👤
           </router-link>
         </div>
       </div>
@@ -37,12 +60,16 @@
   </nav>
 </template>
 
-<script lang="ts">
+<script>
 export default {
   name: 'Navbar',
   computed: {
-    cartItem() {
+    cartItemLength() {
       return Object.keys(this.$store.state.products.itemInCart).length
+    },
+    isAuthenticated() {
+      const token = true // AddTo:get from local storage
+      return !token
     },
   },
 }

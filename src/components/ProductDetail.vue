@@ -4,11 +4,11 @@
       class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden p-6 md:flex md:gap-6"
     >
       <!-- Product Image -->
-      <div class="md:w-1/2 mb-4 md:mb-0">
+      <div class="md:w-1/2 mb-4 md:mb-0 h-96">
         <img
           :src="product.image"
           :alt="product.name"
-          class="w-full h-72 md:h-72 object-cover rounded-lg"
+          class="w-full h-full object-cover rounded-lg"
         />
       </div>
 
@@ -20,7 +20,11 @@
             Brand: <strong>{{ product.brand }}</strong>
           </p>
           <p class="text-xl text-green-700 font-semibold my-3">₹ {{ Math.floor(product.price) }}</p>
-          <p class="text-gray-700 text-sm mb-2">Rating: ⭐ {{ product.rating }} / 5</p>
+          <div class="flex gap-2">
+            <Star />
+            <span>{{ product.rating }} </span>
+          </div>
+
           <p :class="product.inStocks ? 'text-green-600' : 'text-red-500'" class="font-semibold">
             {{ product.inStocks ? 'In Stock' : 'Out of Stock' }}
           </p>
@@ -36,7 +40,7 @@
           <Button
             @click="Button"
             :disabled="!product.inStocks"
-            :class="{ 'bg-gray-400 hover:bg-gray-700  cursor-not-allowed': !product.inStocks }"
+            :class="{ 'bg-gray-400 hover:bg-gray-300 !cursor-not-allowed': !product.inStocks }"
           >
             <template #default>ADD TO CART</template>
           </Button>
@@ -49,11 +53,13 @@
 <script lang="ts">
 import type { Product } from '@/types'
 import Button from './Button.vue'
+import Star from './icons/StarIcon.vue'
 
 export default {
   name: 'ProductDetail',
   components: {
     Button,
+    Star,
   },
   props: {
     id: {

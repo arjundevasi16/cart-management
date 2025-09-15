@@ -13,3 +13,7 @@ export interface CartItem {
   id: number
   quantity: number
 }
+export interface ProductGetters {
+  getItemDetailsInCart: Product[]
+  totalPrice: number
+}
